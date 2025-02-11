@@ -5,64 +5,48 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Service\Parser\ParserInterface;
 use Doctrine\ORM\EntityManagerInterface;
-
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class InvoiceParser
 {
     private EntityManagerInterface $em;
+    private array $parsers;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, #[Autowire('%parsers%')] iterable $parsers)
     {
         $this->em = $em;
+        foreach ($parsers as $parser) {
+            if ($parser instanceof ParserInterface) {
+                $this->parsers[] = $parser;
+            }
+        }
     }
 
-    public function parse(string $fp): void
+    public function parse(string $filePath): void
     {
-        if (str_contains($fp, 'json')) {        //Pour les json
-            $f = file_get_contents($fp);
-            $d = preg_split("/\r\n|\n|\r/", $f);
-            $c = 0;
-            $m = "";
-            $n = "";
-            /** Tant qu'il y a une ligne */
-            while(true){
-                if(isset($d[$c])){
-                    if(str_contains($d[$c], "montant")){
-                    $m = explode(": ", $d[$c])[1];
-                    $m = substr($m, 0, strlen($m) - 1);
-                    }
-                    if(str_contains($d[$c], "nom")){
-                    $n = explode(": ", $d[$c])[1];
-                    $n = substr($n, 0, strlen($n) - 1);
-                    }
-                    if(str_contains($d[$c], "}")){
-                        $this->em->getConnection()->executeStatement(
-                "UPDATE invoice SET amount = {$m} WHERE name = '{$n}'"
-                    );
-                    }
-                    $c++;
-                }else{
-                break;
-                }
+        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+        // Trouver le parser correspondant
+        foreach ($this->parsers as $parser) {
+            if (str_contains(strtolower(get_class($parser)), $extension)) {
+                $invoices = $parser->parse($filePath);
+                $this->saveToDatabase($invoices);
+                return;
             }
-        } elseif (str_contains($fp, 'csv')) {   //Pour les json
+        }
 
+        throw new \Exception("No parser available for file type: $extension");
+    }
 
-            $d = array_map(function($r) {
-                return str_getcsv($r, "\t");
-            }, file($fp));
-            $c = 0;
-                while(true){
-                if(isset($d[$c])){
-                    $this->em->getConnection()->executeStatement(
-                        "UPDATE invoice SET amount = {$d[$c][0]} WHERE name = '{$d[$c][2]}'"
-                    );
-                    $c++;
-                }else{
-                    break;
-                }
-                }
+    private function saveToDatabase(array $invoices): void
+    {
+        foreach ($invoices as $invoice) {
+            $this->em->getConnection()->executeStatement(
+                "UPDATE invoice SET amount = :amount WHERE name = :name",
+                ['amount' => $invoice['amount'], 'name' => $invoice['name']]
+            );
         }
     }
 }
