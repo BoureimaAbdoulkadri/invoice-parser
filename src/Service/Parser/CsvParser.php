@@ -6,20 +6,14 @@ class CsvParser implements ParserInterface
 {
     public function parse(string $filePath): array
     {
-        $rows = array_map('str_getcsv', file($filePath));
         $invoices = [];
-
-        foreach ($rows as $row) {
-            if (count($row) < 3) {
-                continue; // Skip invalid rows
+        if (($handle = fopen($filePath, "r")) !== false) {
+            $headers = fgetcsv($handle);
+            while (($data = fgetcsv($handle)) !== false) {
+                $invoices[] = array_combine($headers, $data);
             }
-
-            $invoices[] = [
-                'name' => trim($row[2]),
-                'amount' => (float) trim($row[0])
-            ];
+            fclose($handle);
         }
-
         return $invoices;
     }
 }

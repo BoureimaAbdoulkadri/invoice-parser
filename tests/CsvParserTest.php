@@ -5,6 +5,8 @@ use PHPUnit\Framework\TestCase;
 namespace App\Service\Parser;
 
 
+use Exception;
+
 class CsvParserTest extends TestCase
 {
   private $csvParser;
@@ -39,7 +41,7 @@ class CsvParserTest extends TestCase
 
   public function testParseInvalidCsv()
   {
-    $this->expectException(\Exception::class);
+    $this->expectException(Exception::class);
 
     $csvContent = "name,age\nJohn Doe,thirty";
     $this->csvParser->parse($csvContent);

@@ -1,0 +1,62 @@
+<transactions>
+    <transaction>
+        <montant>670.43</montant>
+        <devise>EUR</devise>
+        <nom>Frank Green</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>852.38</montant>
+        <devise>EUR</devise>
+        <nom>John Doe</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>135.87</montant>
+        <devise>USD</devise>
+        <nom>Jane Smith</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>572.52</montant>
+        <devise>JPY</devise>
+        <nom>Jane Smith</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>719.77</montant>
+        <devise>GBP</devise>
+        <nom>Charlie Davis</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>648.78</montant>
+        <devise>JPY</devise>
+        <nom>Frank Green</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>72.04</montant>
+        <devise>JPY</devise>
+        <nom>Eve White</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>730.02</montant>
+        <devise>GBP</devise>
+        <nom>David Wilson</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>899.88</montant>
+        <devise>EUR</devise>
+        <nom>Hannah Blue</nom>
+        <date>2025-02-03</date>
+    </transaction>
+    <transaction>
+        <montant>450.61</montant>
+        <devise>EUR</devise>
+        <nom>Alice Johnson</nom>
+        <date>2025-02-03</date>
+    </transaction>
+</transactions>

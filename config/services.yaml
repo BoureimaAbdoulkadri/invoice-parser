@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    parsers: []
 
 services:
     # default configuration for services in *this* file
@@ -23,3 +24,16 @@ services:
     App\Command\:
         resource: '../src/Command'
         tags: ['console.command']
+
+    App\Service\Parser\JsonParser:
+        tags: ['app.parser']
+
+    App\Service\Parser\CsvParser:
+        tags: ['app.parser']
+
+    App\Service\Parser\XmlParser:
+        tags: ['app.parser']
+
+    App\Service\InvoiceParser:
+        arguments:
+            $parsers: !tagged_iterator app.parser
